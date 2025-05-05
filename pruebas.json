@@ -1,0 +1,972 @@
+{
+    "info": {
+      "name": "Biblioteca API",
+      "description": "Collection for testing the Biblioteca API endpoints",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Authentication",
+        "item": [
+          {
+            "name": "Login",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"correo\": \"admin@example.com\",\n    \"contraseña\": \"password123\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/auth/login",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "auth", "login"]
+              },
+              "description": "Login with credentials and get JWT token"
+            },
+            "response": []
+          }
+        ],
+        "description": "Authentication endpoints"
+      },
+      {
+        "name": "Usuarios",
+        "item": [
+          {
+            "name": "Create Usuario",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"nombre\": \"Admin\",\n    \"apellido\": \"Usuario\",\n    \"correo\": \"admin@example.com\",\n    \"contraseña\": \"password123\",\n    \"tipo\": \"Administrador\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/usuarios",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "usuarios"]
+              },
+              "description": "Create a new user with Administrator role"
+            },
+            "response": []
+          },
+          {
+            "name": "Get All Usuarios",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/usuarios",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "usuarios"]
+              },
+              "description": "Get all users with pagination"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Usuario by ID",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/usuarios/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "usuarios", "1"]
+              },
+              "description": "Get a user by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Usuario",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"nombre\": \"Admin Updated\",\n    \"apellido\": \"Usuario Updated\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/usuarios/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "usuarios", "1"]
+              },
+              "description": "Update a user by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Usuario",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/usuarios/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "usuarios", "1"]
+              },
+              "description": "Delete a user by ID"
+            },
+            "response": []
+          }
+        ],
+        "description": "Usuario (User) endpoints"
+      },
+      {
+        "name": "Categorias",
+        "item": [
+          {
+            "name": "Create Categoria",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"nombre\": \"Ciencia\",\n    \"descripcion\": \"Libros de ciencia y tecnología\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/categorias",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "categorias"]
+              },
+              "description": "Create a new category"
+            },
+            "response": []
+          },
+          {
+            "name": "Get All Categorias",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/categorias",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "categorias"]
+              },
+              "description": "Get all categories with pagination"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Categoria by ID",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/categorias/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "categorias", "1"]
+              },
+              "description": "Get a category by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Categoria",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"nombre\": \"Ciencia y Tecnología\",\n    \"descripcion\": \"Libros de ciencia, tecnología e innovación\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/categorias/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "categorias", "1"]
+              },
+              "description": "Update a category by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Categoria",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/categorias/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "categorias", "1"]
+              },
+              "description": "Delete a category by ID"
+            },
+            "response": []
+          }
+        ],
+        "description": "Categoria (Category) endpoints"
+      },
+      {
+        "name": "Documentos",
+        "item": [
+          {
+            "name": "Create Documento",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"categoria_id\": 1,\n    \"titulo\": \"Física Cuántica\",\n    \"autor\": \"Stephen Hawking\",\n    \"editorial\": \"Editorial Científica\",\n    \"tipo\": \"Libro\",\n    \"isbn\": \"978-3-16-148410-0\",\n    \"fecha_publicacion\": \"2020-01-01\",\n    \"ubicacion\": \"Estante A-1\",\n    \"cantidad_disponible\": 5,\n    \"cantidad_total\": 5\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/documentos",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "documentos"]
+              },
+              "description": "Create a new document"
+            },
+            "response": []
+          },
+          {
+            "name": "Get All Documentos",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/documentos",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "documentos"]
+              },
+              "description": "Get all documents with pagination"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Documentos by Categoria",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/documentos/categoria/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "documentos", "categoria", "1"]
+              },
+              "description": "Get documents by category ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Documento by ID",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/documentos/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "documentos", "1"]
+              },
+              "description": "Get a document by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Documento",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"titulo\": \"Universo y Física Cuántica\",\n    \"ubicacion\": \"Estante A-2\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/documentos/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "documentos", "1"]
+              },
+              "description": "Update a document by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Documento",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/documentos/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "documentos", "1"]
+              },
+              "description": "Delete a document by ID"
+            },
+            "response": []
+          }
+        ],
+        "description": "Documento (Document) endpoints"
+      },
+      {
+        "name": "Lectores",
+        "item": [
+          {
+            "name": "Create Lector",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"tipo\": \"Estudiante\",\n    \"nombre\": \"Juan\",\n    \"apellido\": \"Pérez\",\n    \"identificacion\": \"E12345\",\n    \"correo\": \"juan.perez@example.com\",\n    \"telefono\": \"123456789\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/lectores",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "lectores"]
+              },
+              "description": "Create a new reader"
+            },
+            "response": []
+          },
+          {
+            "name": "Get All Lectores",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/lectores",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "lectores"]
+              },
+              "description": "Get all readers with pagination"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Lector by ID",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/lectores/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "lectores", "1"]
+              },
+              "description": "Get a reader by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Lector",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"telefono\": \"987654321\",\n    \"correo\": \"juan.updated@example.com\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/lectores/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "lectores", "1"]
+              },
+              "description": "Update a reader by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Lector",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/lectores/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "lectores", "1"]
+              },
+              "description": "Delete a reader by ID"
+            },
+            "response": []
+          }
+        ],
+        "description": "Lector (Reader) endpoints"
+      },
+      {
+        "name": "Préstamos",
+        "item": [
+          {
+            "name": "Create Préstamo",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"lector_id\": 1,\n    \"documento_id\": 1,\n    \"usuario_id\": 1,\n    \"fecha_prestamo\": \"2025-05-04\",\n    \"fecha_devolucion_programada\": \"2025-05-18\",\n    \"observaciones\": \"Préstamo por dos semanas\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos"]
+              },
+              "description": "Create a new loan"
+            },
+            "response": []
+          },
+          {
+            "name": "Get All Préstamos",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos"]
+              },
+              "description": "Get all loans with pagination"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Pending Returns",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos/pendientes",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos", "pendientes"]
+              },
+              "description": "Get pending returns"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Préstamos by Lector",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos/lector/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos", "lector", "1"]
+              },
+              "description": "Get loans by reader ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Préstamos by Documento",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos/documento/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos", "documento", "1"]
+              },
+              "description": "Get loans by document ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Préstamo by ID",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos", "1"]
+              },
+              "description": "Get a loan by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Register Return",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"fecha_devolucion_real\": \"2025-05-15\",\n    \"observaciones\": \"Devuelto en buen estado\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos/1/devolucion",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos", "1", "devolucion"]
+              },
+              "description": "Register document return"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Préstamo",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"fecha_devolucion_programada\": \"2025-05-25\",\n    \"observaciones\": \"Extensión del préstamo por una semana\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos", "1"]
+              },
+              "description": "Update a loan by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Préstamo",
+            "request": {
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:3000/api/prestamos/1",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["api", "prestamos", "1"]
+              },
+              "description": "Delete a loan by ID"
+            },
+            "response": []
+          }
+        ],
+        "description": "Préstamo (Loan) endpoints"
+      }
+    ],
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "type": "text/javascript",
+          "exec": [""]
+        }
+      },
+      {
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [""]
+        }
+      }
+    ],
+    "variable": [
+      {
+        "key": "token",
+        "value": "",
+        "type": "string"
+      }
+    ]
+  }
