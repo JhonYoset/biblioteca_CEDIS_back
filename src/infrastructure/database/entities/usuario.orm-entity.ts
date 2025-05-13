@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { PrestamoOrmEntity } from './prestamo.orm-entity';
 
 @Entity('usuarios')
 export class UsuarioOrmEntity {
@@ -29,7 +28,5 @@ export class UsuarioOrmEntity {
 
   @UpdateDateColumn()
   fecha_actualizacion: Date;
-
-  @OneToMany(() => PrestamoOrmEntity, prestamo => prestamo.usuario)
-  prestamos: PrestamoOrmEntity[];
+  
 }
