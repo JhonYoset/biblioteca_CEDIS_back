@@ -21,4 +21,8 @@ export class UpdateUsuarioDto {
   @IsOptional()
   @IsEnum(['Administrador', 'Bibliotecario', 'Consultor'])
   tipo?: 'Administrador' | 'Bibliotecario' | 'Consultor';
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> d966938 (modulo de usuario completo)
