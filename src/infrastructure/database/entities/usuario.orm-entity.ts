@@ -28,5 +28,4 @@ export class UsuarioOrmEntity {
 
   @UpdateDateColumn()
   fecha_actualizacion: Date;
-  
 }
