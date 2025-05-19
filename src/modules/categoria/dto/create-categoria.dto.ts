@@ -8,4 +8,8 @@ export class CreateCategoriaDto {
   @IsNotEmpty()
   @IsString()
   descripcion: string;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> ca3a3a6 (MDesarrollo del modulo de categorias completo)

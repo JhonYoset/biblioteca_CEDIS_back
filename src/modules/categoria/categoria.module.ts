@@ -19,4 +19,8 @@ import { CategoriaMapper } from '../../infrastructure/database/mappers/categoria
   ],
   exports: [CategoriaService, 'CategoriaRepository'],
 })
+<<<<<<< HEAD
 export class CategoriaModule {}
+=======
+export class CategoriaModule {}
+>>>>>>> ca3a3a6 (MDesarrollo del modulo de categorias completo)
