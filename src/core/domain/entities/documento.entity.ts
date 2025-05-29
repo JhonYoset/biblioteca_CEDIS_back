@@ -6,13 +6,9 @@ export class DocumentoEntity {
     public autor: string,
     public editorial: string,
     public tipo: 'Libro' | 'Tesis' | 'Diapositiva' | 'Otro',
-    public isbn: string,
     public fecha_publicacion: Date,
-    public ubicacion: string,
-    public cantidad_disponible: number,
-    public cantidad_total: number,
     public fecha_registro: Date,
     public fecha_actualizacion: Date,
-    public estado: boolean,
+    public estado: 'Disponible' | 'No disponible' | 'Reservado',
   ) {}
 }

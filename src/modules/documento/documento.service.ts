@@ -22,10 +22,6 @@ export class DocumentoService {
       throw new BadRequestException(`Categoría con ID ${createDocumentoDto.categoria_id} no encontrada`);
     }
 
-    if (createDocumentoDto.cantidad_disponible > createDocumentoDto.cantidad_total) {
-      throw new BadRequestException('La cantidad disponible no puede ser mayor que la cantidad total');
-    }
-
     const documento = new DocumentoEntity(
       undefined,
       createDocumentoDto.categoria_id,
@@ -33,14 +29,10 @@ export class DocumentoService {
       createDocumentoDto.autor,
       createDocumentoDto.editorial,
       createDocumentoDto.tipo,
-      createDocumentoDto.isbn,
       createDocumentoDto.fecha_publicacion ? new Date(createDocumentoDto.fecha_publicacion) : undefined,
-      createDocumentoDto.ubicacion,
-      createDocumentoDto.cantidad_disponible,
-      createDocumentoDto.cantidad_total,
       new Date(),
       new Date(),
-      true,
+      createDocumentoDto.estado,
     );
 
     return this.documentoRepository.create(documento);
@@ -79,12 +71,6 @@ export class DocumentoService {
       const categoria = await this.categoriaRepository.findById(updateDocumentoDto.categoria_id);
       if (!categoria) {
         throw new BadRequestException(`Categoría con ID ${updateDocumentoDto.categoria_id} no encontrada`);
-      }
-    }
-
-    if (updateDocumentoDto.cantidad_disponible !== undefined && updateDocumentoDto.cantidad_total !== undefined) {
-      if (updateDocumentoDto.cantidad_disponible > updateDocumentoDto.cantidad_total) {
-        throw new BadRequestException('La cantidad disponible no puede ser mayor que la cantidad total');
       }
     }
 

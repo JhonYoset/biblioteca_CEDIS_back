@@ -13,11 +13,7 @@ export class DocumentoMapper extends BaseMapper<DocumentoEntity, DocumentoOrmEnt
       ormEntity.autor,
       ormEntity.editorial,
       ormEntity.tipo,
-      ormEntity.isbn,
       ormEntity.fecha_publicacion,
-      ormEntity.ubicacion,
-      ormEntity.cantidad_disponible,
-      ormEntity.cantidad_total,
       ormEntity.fecha_registro,
       ormEntity.fecha_actualizacion,
       ormEntity.estado,
@@ -36,11 +32,7 @@ export class DocumentoMapper extends BaseMapper<DocumentoEntity, DocumentoOrmEnt
     ormEntity.autor = domainEntity.autor;
     ormEntity.editorial = domainEntity.editorial;
     ormEntity.tipo = domainEntity.tipo;
-    ormEntity.isbn = domainEntity.isbn;
     ormEntity.fecha_publicacion = domainEntity.fecha_publicacion;
-    ormEntity.ubicacion = domainEntity.ubicacion;
-    ormEntity.cantidad_disponible = domainEntity.cantidad_disponible;
-    ormEntity.cantidad_total = domainEntity.cantidad_total;
     
     if (domainEntity.fecha_registro) {
       ormEntity.fecha_registro = domainEntity.fecha_registro;
