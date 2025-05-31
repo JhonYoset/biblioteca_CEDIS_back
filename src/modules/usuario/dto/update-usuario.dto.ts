@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUsuarioDto {
   @IsOptional()
@@ -14,15 +14,6 @@ export class UpdateUsuarioDto {
   correo?: string;
 
   @IsOptional()
-  @IsString()
-  @MinLength(6)
-  contraseña?: string;
-
-  @IsOptional()
   @IsEnum(['Administrador', 'Bibliotecario', 'Consultor'])
   tipo?: 'Administrador' | 'Bibliotecario' | 'Consultor';
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> d966938 (modulo de usuario completo)

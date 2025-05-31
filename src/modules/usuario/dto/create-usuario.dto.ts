@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUsuarioDto {
   @IsNotEmpty()
@@ -12,11 +12,6 @@ export class CreateUsuarioDto {
   @IsNotEmpty()
   @IsEmail()
   correo: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(6)
-  contraseña: string;
 
   @IsNotEmpty()
   @IsEnum(['Administrador', 'Bibliotecario', 'Consultor'])

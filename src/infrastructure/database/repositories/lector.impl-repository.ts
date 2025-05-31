@@ -54,6 +54,12 @@ export class LectorImplRepository implements LectorRepository {
     return lector ? this.lectorMapper.toDomain(lector) : null;
   }
 
+  // ✅ NUEVO MÉTODO OPTIMIZADO
+  async findByEmail(email: string): Promise<LectorEntity | null> {
+    const lector = await this.lectorRepository.findOne({ where: { correo: email } });
+    return lector ? this.lectorMapper.toDomain(lector) : null;
+  }
+
   async create(lector: LectorEntity): Promise<LectorEntity> {
     const ormLector = this.lectorMapper.toOrm(lector);
     const savedLector = await this.lectorRepository.save(ormLector);

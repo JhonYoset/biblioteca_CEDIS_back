@@ -11,7 +11,6 @@ export class UsuarioMapper extends BaseMapper<UsuarioEntity, UsuarioOrmEntity> {
       ormEntity.nombre,
       ormEntity.apellido,
       ormEntity.correo,
-      ormEntity.contraseña,
       ormEntity.tipo,
       ormEntity.fecha_creacion,
       ormEntity.fecha_actualizacion,
@@ -28,7 +27,6 @@ export class UsuarioMapper extends BaseMapper<UsuarioEntity, UsuarioOrmEntity> {
     ormEntity.nombre = domainEntity.nombre;
     ormEntity.apellido = domainEntity.apellido;
     ormEntity.correo = domainEntity.correo;
-    ormEntity.contraseña = domainEntity.contraseña;
     ormEntity.tipo = domainEntity.tipo;
     
     if (domainEntity.fecha_creacion) {

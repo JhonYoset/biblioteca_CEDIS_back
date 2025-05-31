@@ -19,6 +19,12 @@ export class LectorService {
       throw new BadRequestException('La identificación ya está registrada');
     }
 
+    // También verificar por email
+    const existingByEmail = await this.findByEmail(createLectorDto.correo);
+    if (existingByEmail) {
+      throw new BadRequestException('El correo ya está registrado');
+    }
+
     const lector = new LectorEntity(
       undefined,
       createLectorDto.tipo,
@@ -52,6 +58,15 @@ export class LectorService {
     return lector;
   }
 
+  async findByEmail(email: string): Promise<LectorEntity | null> {
+    try {
+      return await this.lectorRepository.findByEmail(email);
+    } catch (error) {
+      console.error('Error buscando lector por email:', error);
+      return null;
+    }
+  }
+
   async update(id: number, updateLectorDto: UpdateLectorDto) {
     const lector = await this.findOne(id);
 
@@ -59,6 +74,13 @@ export class LectorService {
       const existingLector = await this.lectorRepository.findByIdentificacion(updateLectorDto.identificacion);
       if (existingLector) {
         throw new BadRequestException('La identificación ya está registrada');
+      }
+    }
+
+    if (updateLectorDto.correo && updateLectorDto.correo !== lector.correo) {
+      const existingByEmail = await this.findByEmail(updateLectorDto.correo);
+      if (existingByEmail) {
+        throw new BadRequestException('El correo ya está registrado');
       }
     }
 

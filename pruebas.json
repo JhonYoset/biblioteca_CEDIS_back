@@ -1,972 +1,1430 @@
 {
-    "info": {
-      "name": "Biblioteca API",
-      "description": "Collection for testing the Biblioteca API endpoints",
-      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  "info": {
+    "name": "CEDIS - Pruebas Completas",
+    "description": "Colección completa de pruebas para el sistema CEDIS con todo integrado en un solo archivo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
     },
-    "item": [
-      {
-        "name": "Authentication",
-        "item": [
-          {
-            "name": "Login",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"correo\": \"admin@example.com\",\n    \"contraseña\": \"password123\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/auth/login",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "auth", "login"]
-              },
-              "description": "Login with credentials and get JWT token"
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lectorId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "categoriaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "documentoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "prestamoId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🚀 CONFIGURACIÓN INICIAL",
+      "item": [
+        {
+          "name": "1. Verificar Servidor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Servidor funcionando', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Respuesta contiene información del servicio', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('message');",
+                  "});",
+                  "",
+                  "console.log('✅ Servidor de autenticación funcionando correctamente');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "status"]
             },
-            "response": []
+            "description": "Verificar que el servidor esté funcionando"
           }
-        ],
-        "description": "Authentication endpoints"
-      },
-      {
-        "name": "Usuarios",
-        "item": [
-          {
-            "name": "Create Usuario",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
+        },
+        {
+          "name": "2. Crear Primer Administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.test('Administrador creado exitosamente', function () {",
+                  "        pm.response.to.have.status(201);",
+                  "    });",
+                  "    ",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('userId', response.id);",
+                  "    console.log('✅ Primer administrador creado con ID:', response.id);",
+                  "    ",
+                  "} else if (pm.response.code === 400) {",
+                  "    pm.test('Administrador ya existe', function () {",
+                  "        pm.response.to.have.status(400);",
+                  "    });",
+                  "    console.log('ℹ️ El administrador ya existe');",
+                  "    ",
+                  "} else {",
+                  "    pm.test('Error inesperado', function () {",
+                  "        pm.expect.fail('Status code inesperado: ' + pm.response.code);",
+                  "    });",
+                  "}"
                 ]
-              },
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"nombre\": \"Admin\",\n    \"apellido\": \"Usuario\",\n    \"correo\": \"admin@example.com\",\n    \"contraseña\": \"password123\",\n    \"tipo\": \"Administrador\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/usuarios",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "usuarios"]
-              },
-              "description": "Create a new user with Administrator role"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan Carlos\",\n  \"apellido\": \"Pérez García\",\n  \"correo\": \"admin@biblioteca.unsa.edu.pe\",\n  \"tipo\": \"Administrador\"\n}"
             },
-            "response": []
-          },
-          {
-            "name": "Get All Usuarios",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/usuarios",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "usuarios"]
-              },
-              "description": "Get all users with pagination"
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/register-first-admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "register-first-admin"]
             },
-            "response": []
-          },
-          {
-            "name": "Get Usuario by ID",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/usuarios/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "usuarios", "1"]
-              },
-              "description": "Get a user by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Update Usuario",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "PUT",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"nombre\": \"Admin Updated\",\n    \"apellido\": \"Usuario Updated\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/usuarios/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "usuarios", "1"]
-              },
-              "description": "Update a user by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Delete Usuario",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "DELETE",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/usuarios/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "usuarios", "1"]
-              },
-              "description": "Delete a user by ID"
-            },
-            "response": []
+            "description": "Crear el primer usuario administrador"
           }
-        ],
-        "description": "Usuario (User) endpoints"
-      },
-      {
-        "name": "Categorias",
-        "item": [
-          {
-            "name": "Create Categoria",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
+        },
+        {
+          "name": "3. Obtener Token de Autenticación",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Autenticación exitosa', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Token recibido', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('access_token');",
+                  "    pm.expect(response.access_token).to.be.a('string');",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "if (response.access_token) {",
+                  "    pm.collectionVariables.set('token', response.access_token);",
+                  "    pm.collectionVariables.set('userId', response.user.id);",
+                  "    console.log('✅ Token guardado exitosamente');",
+                  "    console.log('👤 Usuario:', response.user.nombre, response.user.apellido);",
+                  "    console.log('📧 Email:', response.user.correo);",
+                  "    console.log('🏷️ Tipo:', response.user.tipo);",
+                  "} else {",
+                  "    console.log('❌ No se pudo obtener el token');",
+                  "}"
                 ]
-              },
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"nombre\": \"Ciencia\",\n    \"descripcion\": \"Libros de ciencia y tecnología\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/categorias",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "categorias"]
-              },
-              "description": "Create a new category"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@biblioteca.unsa.edu.pe\"\n}"
             },
-            "response": []
-          },
-          {
-            "name": "Get All Categorias",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/categorias",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "categorias"]
-              },
-              "description": "Get all categories with pagination"
+            "url": {
+              "raw": "{{baseUrl}}/auth/validate-email",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "validate-email"]
             },
-            "response": []
-          },
-          {
-            "name": "Get Categoria by ID",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/categorias/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "categorias", "1"]
-              },
-              "description": "Get a category by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Update Categoria",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "PUT",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"nombre\": \"Ciencia y Tecnología\",\n    \"descripcion\": \"Libros de ciencia, tecnología e innovación\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/categorias/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "categorias", "1"]
-              },
-              "description": "Update a category by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Delete Categoria",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "DELETE",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/categorias/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "categorias", "1"]
-              },
-              "description": "Delete a category by ID"
-            },
-            "response": []
+            "description": "Obtener token JWT validando el email"
           }
-        ],
-        "description": "Categoria (Category) endpoints"
-      },
-      {
-        "name": "Documentos",
-        "item": [
-          {
-            "name": "Create Documento",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"categoria_id\": 1,\n    \"titulo\": \"Física Cuántica\",\n    \"autor\": \"Stephen Hawking\",\n    \"editorial\": \"Editorial Científica\",\n    \"tipo\": \"Libro\",\n    \"isbn\": \"978-3-16-148410-0\",\n    \"fecha_publicacion\": \"2020-01-01\",\n    \"ubicacion\": \"Estante A-1\",\n    \"cantidad_disponible\": 5,\n    \"cantidad_total\": 5\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/documentos",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "documentos"]
-              },
-              "description": "Create a new document"
-            },
-            "response": []
-          },
-          {
-            "name": "Get All Documentos",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/documentos",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "documentos"]
-              },
-              "description": "Get all documents with pagination"
-            },
-            "response": []
-          },
-          {
-            "name": "Get Documentos by Categoria",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/documentos/categoria/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "documentos", "categoria", "1"]
-              },
-              "description": "Get documents by category ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Get Documento by ID",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/documentos/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "documentos", "1"]
-              },
-              "description": "Get a document by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Update Documento",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "PUT",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"titulo\": \"Universo y Física Cuántica\",\n    \"ubicacion\": \"Estante A-2\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/documentos/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "documentos", "1"]
-              },
-              "description": "Update a document by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Delete Documento",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "DELETE",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/documentos/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "documentos", "1"]
-              },
-              "description": "Delete a document by ID"
-            },
-            "response": []
-          }
-        ],
-        "description": "Documento (Document) endpoints"
-      },
-      {
-        "name": "Lectores",
-        "item": [
-          {
-            "name": "Create Lector",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"tipo\": \"Estudiante\",\n    \"nombre\": \"Juan\",\n    \"apellido\": \"Pérez\",\n    \"identificacion\": \"E12345\",\n    \"correo\": \"juan.perez@example.com\",\n    \"telefono\": \"123456789\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/lectores",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "lectores"]
-              },
-              "description": "Create a new reader"
-            },
-            "response": []
-          },
-          {
-            "name": "Get All Lectores",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/lectores",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "lectores"]
-              },
-              "description": "Get all readers with pagination"
-            },
-            "response": []
-          },
-          {
-            "name": "Get Lector by ID",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/lectores/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "lectores", "1"]
-              },
-              "description": "Get a reader by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Update Lector",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "PUT",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"telefono\": \"987654321\",\n    \"correo\": \"juan.updated@example.com\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/lectores/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "lectores", "1"]
-              },
-              "description": "Update a reader by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Delete Lector",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "DELETE",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/lectores/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "lectores", "1"]
-              },
-              "description": "Delete a reader by ID"
-            },
-            "response": []
-          }
-        ],
-        "description": "Lector (Reader) endpoints"
-      },
-      {
-        "name": "Préstamos",
-        "item": [
-          {
-            "name": "Create Préstamo",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"lector_id\": 1,\n    \"documento_id\": 1,\n    \"usuario_id\": 1,\n    \"fecha_prestamo\": \"2025-05-04\",\n    \"fecha_devolucion_programada\": \"2025-05-18\",\n    \"observaciones\": \"Préstamo por dos semanas\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos"]
-              },
-              "description": "Create a new loan"
-            },
-            "response": []
-          },
-          {
-            "name": "Get All Préstamos",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos"]
-              },
-              "description": "Get all loans with pagination"
-            },
-            "response": []
-          },
-          {
-            "name": "Get Pending Returns",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos/pendientes",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos", "pendientes"]
-              },
-              "description": "Get pending returns"
-            },
-            "response": []
-          },
-          {
-            "name": "Get Préstamos by Lector",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos/lector/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos", "lector", "1"]
-              },
-              "description": "Get loans by reader ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Get Préstamos by Documento",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos/documento/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos", "documento", "1"]
-              },
-              "description": "Get loans by document ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Get Préstamo by ID",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos", "1"]
-              },
-              "description": "Get a loan by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Register Return",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "PUT",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"fecha_devolucion_real\": \"2025-05-15\",\n    \"observaciones\": \"Devuelto en buen estado\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos/1/devolucion",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos", "1", "devolucion"]
-              },
-              "description": "Register document return"
-            },
-            "response": []
-          },
-          {
-            "name": "Update Préstamo",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "PUT",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n    \"fecha_devolucion_programada\": \"2025-05-25\",\n    \"observaciones\": \"Extensión del préstamo por una semana\"\n}"
-              },
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos", "1"]
-              },
-              "description": "Update a loan by ID"
-            },
-            "response": []
-          },
-          {
-            "name": "Delete Préstamo",
-            "request": {
-              "auth": {
-                "type": "bearer",
-                "bearer": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "string"
-                  }
-                ]
-              },
-              "method": "DELETE",
-              "header": [],
-              "url": {
-                "raw": "http://localhost:3000/api/prestamos/1",
-                "protocol": "http",
-                "host": ["localhost"],
-                "port": "3000",
-                "path": ["api", "prestamos", "1"]
-              },
-              "description": "Delete a loan by ID"
-            },
-            "response": []
-          }
-        ],
-        "description": "Préstamo (Loan) endpoints"
-      }
-    ],
-    "event": [
-      {
-        "listen": "prerequest",
-        "script": {
-          "type": "text/javascript",
-          "exec": [""]
         }
-      },
-      {
-        "listen": "test",
-        "script": {
-          "type": "text/javascript",
-          "exec": [""]
+      ],
+      "description": "Configuración inicial del sistema",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "console.log('🚀 Iniciando configuración inicial...');"
+            ]
+          }
         }
+      ]
+    },
+    {
+      "name": "📚 CATEGORÍAS",
+      "item": [
+        {
+          "name": "Crear Categoría - Ingeniería",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Categoría creada exitosamente', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Respuesta contiene ID de categoría', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('id');",
+                  "    pm.expect(response.id).to.be.a('number');",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "pm.collectionVariables.set('categoriaId', response.id);",
+                  "console.log('✅ Categoría Ingeniería creada con ID:', response.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ingeniería de Sistemas\",\n  \"descripcion\": \"Libros y recursos relacionados con ingeniería de sistemas, programación y tecnología\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias"]
+            }
+          }
+        },
+        {
+          "name": "Crear Categoría - Matemáticas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Categoría Matemáticas creada', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "console.log('✅ Categoría Matemáticas creada');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Matemáticas\",\n  \"descripcion\": \"Libros de cálculo, álgebra, estadística y matemáticas aplicadas\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias"]
+            }
+          }
+        },
+        {
+          "name": "Crear Categoría - Física",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Categoría Física creada', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "console.log('✅ Categoría Física creada');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Física\",\n  \"descripcion\": \"Libros de física teórica, experimental y aplicada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias"]
+            }
+          }
+        },
+        {
+          "name": "Listar Categorías",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Categorías listadas correctamente', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Respuesta contiene datos paginados', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('data');",
+                  "    pm.expect(response).to.have.property('total');",
+                  "    pm.expect(response).to.have.property('currentPage');",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('📚 Total de categorías:', response.total);",
+                  "console.log('📄 Categorías en esta página:', response.data.length);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categorias?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Gestión de categorías de documentos"
+    },
+    {
+      "name": "📖 LECTORES",
+      "item": [
+        {
+          "name": "Crear Lector Estudiante",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lector estudiante creado', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Lector tiene ID válido', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('id');",
+                  "    pm.expect(response.id).to.be.a('number');",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "pm.collectionVariables.set('lectorId', response.id);",
+                  "console.log('✅ Lector estudiante creado con ID:', response.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"Estudiante\",\n  \"nombre\": \"Ana Sofía\",\n  \"apellido\": \"Mendoza Torres\",\n  \"identificacion\": \"20191234\",\n  \"correo\": \"20191234@unsa.edu.pe\",\n  \"telefono\": \"987654321\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lectores",
+              "host": ["{{baseUrl}}"],
+              "path": ["lectores"]
+            }
+          }
+        },
+        {
+          "name": "Crear Lector Docente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lector docente creado', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "console.log('✅ Lector docente creado');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"Docente\",\n  \"nombre\": \"Dr. Roberto\",\n  \"apellido\": \"Chávez Morales\",\n  \"identificacion\": \"DOC001\",\n  \"correo\": \"rchavez@unsa.edu.pe\",\n  \"telefono\": \"954123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lectores",
+              "host": ["{{baseUrl}}"],
+              "path": ["lectores"]
+            }
+          }
+        },
+        {
+          "name": "Crear Lector Administrativo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lector administrativo creado', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "console.log('✅ Lector administrativo creado');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"Administrativo\",\n  \"nombre\": \"Ing. Patricia\",\n  \"apellido\": \"Flores Quispe\",\n  \"identificacion\": \"ADM001\",\n  \"correo\": \"pflores@unsa.edu.pe\",\n  \"telefono\": \"962147258\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lectores",
+              "host": ["{{baseUrl}}"],
+              "path": ["lectores"]
+            }
+          }
+        },
+        {
+          "name": "Listar Lectores",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lectores listados correctamente', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('📖 Total de lectores:', response.total);",
+                  "console.log('👥 Lectores en esta página:', response.data.length);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lectores?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["lectores"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Gestión de lectores del sistema"
+    },
+    {
+      "name": "📄 DOCUMENTOS",
+      "item": [
+        {
+          "name": "Crear Documento - Libro Java",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Libro creado exitosamente', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Documento tiene ID válido', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('id');",
+                  "    pm.expect(response.id).to.be.a('number');",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "pm.collectionVariables.set('documentoId', response.id);",
+                  "console.log('✅ Libro de Java creado con ID:', response.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoria_id\": {{categoriaId}},\n  \"titulo\": \"Fundamentos de Programación en Java\",\n  \"autor\": \"Herbert Schildt\",\n  \"editorial\": \"McGraw-Hill\",\n  \"tipo\": \"Libro\",\n  \"isbn\": \"978-0071809252\",\n  \"fecha_publicacion\": \"2020-01-15\",\n  \"ubicacion\": \"Estante A1-Nivel 2\",\n  \"cantidad_disponible\": 5,\n  \"cantidad_total\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/documentos",
+              "host": ["{{baseUrl}}"],
+              "path": ["documentos"]
+            }
+          }
+        },
+        {
+          "name": "Crear Documento - Tesis",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tesis creada exitosamente', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "console.log('✅ Tesis creada exitosamente');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoria_id\": {{categoriaId}},\n  \"titulo\": \"Sistema de Gestión Bibliotecaria con Tecnología Web\",\n  \"autor\": \"García López, María Elena\",\n  \"editorial\": \"UNSA\",\n  \"tipo\": \"Tesis\",\n  \"isbn\": \"\",\n  \"fecha_publicacion\": \"2023-12-15\",\n  \"ubicacion\": \"Archivo Tesis - T001\",\n  \"cantidad_disponible\": 1,\n  \"cantidad_total\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/documentos",
+              "host": ["{{baseUrl}}"],
+              "path": ["documentos"]
+            }
+          }
+        },
+        {
+          "name": "Crear Documento - Diapositivas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Diapositivas creadas exitosamente', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "console.log('✅ Diapositivas creadas exitosamente');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoria_id\": {{categoriaId}},\n  \"titulo\": \"Introducción a Algoritmos y Estructuras de Datos\",\n  \"autor\": \"Dr. Carlos Ramírez\",\n  \"editorial\": \"UNSA - Facultad de Ingeniería\",\n  \"tipo\": \"Diapositiva\",\n  \"isbn\": \"\",\n  \"fecha_publicacion\": \"2024-03-10\",\n  \"ubicacion\": \"Archivo Digital - D001\",\n  \"cantidad_disponible\": 3,\n  \"cantidad_total\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/documentos",
+              "host": ["{{baseUrl}}"],
+              "path": ["documentos"]
+            }
+          }
+        },
+        {
+          "name": "Listar Documentos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Documentos listados correctamente', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('📄 Total de documentos:', response.total);",
+                  "console.log('📚 Documentos en esta página:', response.data.length);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/documentos?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["documentos"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Documentos por Categoría",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Documentos filtrados por categoría', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('📂 Documentos en categoría Ingeniería:', response.data.length);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/documentos/categoria/{{categoriaId}}?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["documentos", "categoria", "{{categoriaId}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Gestión de documentos de la biblioteca"
+    },
+    {
+      "name": "📋 PRÉSTAMOS",
+      "item": [
+        {
+          "name": "Crear Préstamo",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Calcular fechas automáticamente",
+                  "const today = new Date();",
+                  "const returnDate = new Date(today.getTime() + (14 * 24 * 60 * 60 * 1000)); // 14 días después",
+                  "",
+                  "const formatDate = (date) => {",
+                  "    return date.toISOString().split('T')[0];",
+                  "};",
+                  "",
+                  "pm.collectionVariables.set('fechaPrestamo', formatDate(today));",
+                  "pm.collectionVariables.set('fechaDevolucion', formatDate(returnDate));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Préstamo creado exitosamente', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Préstamo tiene ID válido', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('id');",
+                  "    pm.expect(response.id).to.be.a('number');",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "pm.collectionVariables.set('prestamoId', response.id);",
+                  "console.log('✅ Préstamo creado con ID:', response.id);",
+                  "console.log('📅 Fecha préstamo:', response.fecha_prestamo);",
+                  "console.log('📅 Fecha devolución programada:', response.fecha_devolucion_programada);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lector_id\": {{lectorId}},\n  \"documento_id\": {{documentoId}},\n  \"usuario_id\": {{userId}},\n  \"fecha_prestamo\": \"{{fechaPrestamo}}\",\n  \"fecha_devolucion_programada\": \"{{fechaDevolucion}}\",\n  \"observaciones\": \"Préstamo de prueba - estudiante Ana Sofía\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/prestamos",
+              "host": ["{{baseUrl}}"],
+              "path": ["prestamos"]
+            }
+          }
+        },
+        {
+          "name": "Listar Préstamos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Préstamos listados correctamente', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('📋 Total de préstamos:', response.total);",
+                  "console.log('📑 Préstamos en esta página:', response.data.length);",
+                  "",
+                  "if (response.data.length > 0) {",
+                  "    console.log('🔍 Primer préstamo:', {",
+                  "        id: response.data[0].id,",
+                  "        estado: response.data[0].estado,",
+                  "        fecha_prestamo: response.data[0].fecha_prestamo",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/prestamos?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["prestamos"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Préstamos Pendientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Consulta de pendientes exitosa', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('⚠️ Préstamos pendientes/vencidos:', response.length);",
+                  "",
+                  "if (response.length > 0) {",
+                  "    response.forEach((prestamo, index) => {",
+                  "        console.log(`   ${index + 1}. ID: ${prestamo.id}, Estado: ${prestamo.estado}`);",
+                  "    });",
+                  "} else {",
+                  "    console.log('✅ No hay préstamos vencidos');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/prestamos/pendientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["prestamos", "pendientes"]
+            }
+          }
+        },
+        {
+          "name": "Préstamos por Lector",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Préstamos del lector obtenidos', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('👤 Préstamos del lector:', response.total);",
+                  "console.log('📋 En esta página:', response.data.length);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/prestamos/lector/{{lectorId}}?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["prestamos", "lector", "{{lectorId}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar Devolución",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Calcular fecha de devolución (hoy)",
+                  "const today = new Date();",
+                  "const formatDate = (date) => {",
+                  "    return date.toISOString().split('T')[0];",
+                  "};",
+                  "",
+                  "pm.collectionVariables.set('fechaDevolucionReal', formatDate(today));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Devolución registrada exitosamente', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Estado actualizado a Devuelto', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.estado).to.equal('Devuelto');",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('✅ Devolución registrada exitosamente');",
+                  "console.log('📅 Fecha devolución real:', response.fecha_devolucion_real);",
+                  "console.log('🏷️ Estado actual:', response.estado);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_devolucion_real\": \"{{fechaDevolucionReal}}\",\n  \"observaciones\": \"Devuelto en perfectas condiciones. Libro bien cuidado por la estudiante.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/prestamos/{{prestamoId}}/devolucion",
+              "host": ["{{baseUrl}}"],
+              "path": ["prestamos", "{{prestamoId}}", "devolucion"]
+            }
+          }
+        }
+      ],
+      "description": "Gestión completa de préstamos"
+    },
+    {
+      "name": "👥 USUARIOS ADICIONALES",
+      "item": [
+        {
+          "name": "Crear Usuario Bibliotecario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Bibliotecario creado exitosamente', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('✅ Bibliotecario creado con ID:', response.id);",
+                  "console.log('👤 Nombre completo:', response.nombre, response.apellido);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"María Elena\",\n  \"apellido\": \"García López\",\n  \"correo\": \"bibliotecario@unsa.edu.pe\",\n  \"tipo\": \"Bibliotecario\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Crear Usuario Consultor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Consultor creado exitosamente', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "console.log('✅ Usuario consultor creado');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos Eduardo\",\n  \"apellido\": \"Martínez Silva\",\n  \"correo\": \"consultor@unsa.edu.pe\",\n  \"tipo\": \"Consultor\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todos los Usuarios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Usuarios listados correctamente', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "console.log('👥 Total de usuarios en el sistema:', response.total);",
+                  "",
+                  "// Contar usuarios por tipo",
+                  "const userTypes = {};",
+                  "response.data.forEach(user => {",
+                  "    userTypes[user.tipo] = (userTypes[user.tipo] || 0) + 1;",
+                  "});",
+                  "",
+                  "console.log('📊 Distribución por tipo:');",
+                  "Object.keys(userTypes).forEach(tipo => {",
+                  "    console.log(`   • ${tipo}: ${userTypes[tipo]}`);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Crear usuarios adicionales del sistema"
+    },
+    {
+      "name": "📊 REPORTES Y CONSULTAS",
+      "item": [
+        {
+          "name": "Resumen General del Sistema",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Usuarios consultados correctamente', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const usuarios = pm.response.json();",
+                  "",
+                  "// Consultar otras entidades para generar reporte",
+                  "pm.sendRequest({",
+                  "    url: pm.collectionVariables.get('baseUrl') + '/categorias',",
+                  "    method: 'GET',",
+                  "    header: {",
+                  "        'Authorization': 'Bearer ' + pm.collectionVariables.get('token')",
+                  "    }",
+                  "}, function (err, categorias) {",
+                  "    pm.sendRequest({",
+                  "        url: pm.collectionVariables.get('baseUrl') + '/lectores',",
+                  "        method: 'GET',",
+                  "        header: {",
+                  "            'Authorization': 'Bearer ' + pm.collectionVariables.get('token')",
+                  "        }",
+                  "    }, function (err, lectores) {",
+                  "        pm.sendRequest({",
+                  "            url: pm.collectionVariables.get('baseUrl') + '/documentos',",
+                  "            method: 'GET',",
+                  "            header: {",
+                  "                'Authorization': 'Bearer ' + pm.collectionVariables.get('token')",
+                  "            }",
+                  "        }, function (err, documentos) {",
+                  "            pm.sendRequest({",
+                  "                url: pm.collectionVariables.get('baseUrl') + '/prestamos',",
+                  "                method: 'GET',",
+                  "                header: {",
+                  "                    'Authorization': 'Bearer ' + pm.collectionVariables.get('token')",
+                  "                }",
+                  "            }, function (err, prestamos) {",
+                  "                // Generar reporte completo",
+                  "                console.log('');",
+                  "                console.log('📊 REPORTE GENERAL DEL SISTEMA CEDIS');",
+                  "                console.log('=' .repeat(50));",
+                  "                console.log('👥 Usuarios del sistema:', usuarios.total);",
+                  "                console.log('📚 Categorías:', categorias.json().total);",
+                  "                console.log('📖 Lectores registrados:', lectores.json().total);",
+                  "                console.log('📄 Documentos en catálogo:', documentos.json().total);",
+                  "                console.log('📋 Préstamos realizados:', prestamos.json().total);",
+                  "                console.log('=' .repeat(50));",
+                  "                console.log('✅ Sistema CEDIS funcionando correctamente');",
+                  "                console.log('🎉 Todas las funcionalidades probadas exitosamente');",
+                  "            });",
+                  "        });",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios"]
+            }
+          }
+        }
+      ],
+      "description": "Reportes y estadísticas del sistema"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script global ejecutado antes de cada request",
+          "const requestName = pm.info.requestName;",
+          "const folderName = pm.info.requestName.includes('CONFIGURACIÓN') ? '🚀' : ",
+          "                   pm.info.requestName.includes('CATEGORÍAS') ? '📚' : ",
+          "                   pm.info.requestName.includes('LECTORES') ? '📖' : ",
+          "                   pm.info.requestName.includes('DOCUMENTOS') ? '📄' : ",
+          "                   pm.info.requestName.includes('PRÉSTAMOS') ? '📋' : '⚡';",
+          "",
+          "console.log(`\\n${folderName} Ejecutando: ${requestName}`);"
+        ]
       }
-    ],
-    "variable": [
-      {
-        "key": "token",
-        "value": "",
-        "type": "string"
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script global ejecutado después de cada request",
+          "const statusCode = pm.response.code;",
+          "const statusIcon = statusCode >= 200 && statusCode < 300 ? '✅' : ",
+          "                   statusCode >= 400 && statusCode < 500 ? '⚠️' : '❌';",
+          "",
+          "console.log(`${statusIcon} Status: ${statusCode} ${pm.response.status}`);",
+          "",
+          "// Log de errores detallado",
+          "if (statusCode >= 400) {",
+          "    try {",
+          "        const errorResponse = pm.response.json();",
+          "        console.log('❌ Error Details:', errorResponse.message || errorResponse);",
+          "    } catch (e) {",
+          "        console.log('❌ Error Response:', pm.response.text());",
+          "    }",
+          "}",
+          "",
+          "// Verificar autenticación",
+          "if (statusCode === 401) {",
+          "    console.log('🔐 Sugerencia: Ejecutar \"Obtener Token de Autenticación\" primero');",
+          "}"
+  ]
       }
-    ]
-  }
+    }
+  ]
+}

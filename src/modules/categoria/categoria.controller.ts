@@ -54,8 +54,4 @@ export class CategoriaController {
   remove(@Param('id') id: string) {
     return this.categoriaService.remove(+id);
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> ca3a3a6 (MDesarrollo del modulo de categorias completo)

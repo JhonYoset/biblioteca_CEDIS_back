@@ -14,9 +14,6 @@ export class UsuarioOrmEntity {
   @Column({ unique: true })
   correo: string;
 
-  @Column()
-  contraseña: string;
-
   @Column({
     type: 'enum',
     enum: ['Administrador', 'Bibliotecario', 'Consultor'],

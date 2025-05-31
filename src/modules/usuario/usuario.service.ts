@@ -3,7 +3,6 @@ import { UsuarioRepository } from '../../core/contracts/usuario.repository';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PaginationDto } from '../pagination.dto';
-import * as bcrypt from 'bcrypt';
 import { UsuarioEntity } from '../../core/domain/entities/usuario.entity';
 
 @Injectable()
@@ -20,14 +19,11 @@ export class UsuarioService {
       throw new BadRequestException('El correo ya está registrado');
     }
 
-    const hashedPassword = await bcrypt.hash(createUsuarioDto.contraseña, 10);
-
     const usuario = new UsuarioEntity(
       undefined,
       createUsuarioDto.nombre,
       createUsuarioDto.apellido,
       createUsuarioDto.correo,
-      hashedPassword,
       createUsuarioDto.tipo,
       new Date(),
       new Date(),
@@ -54,9 +50,51 @@ export class UsuarioService {
     return usuario;
   }
 
-  // This is the missing method needed by the AuthService
   async findByEmail(email: string) {
     return this.usuarioRepository.findByEmail(email);
+  }
+
+  async findOrCreateByGoogleProfile(profile: any) {
+    const email = profile.emails[0].value;
+    
+    // Buscar usuario existente
+    let usuario = await this.usuarioRepository.findByEmail(email);
+    
+    if (!usuario) {
+      // Determinar el tipo de usuario basado en el dominio del email
+      const userType = this.determineUserTypeByEmail(email);
+      
+      // Crear nuevo usuario
+      const newUsuario = new UsuarioEntity(
+        undefined,
+        profile.name.givenName || profile.displayName,
+        profile.name.familyName || '',
+        email,
+        userType,
+        new Date(),
+        new Date(),
+      );
+      
+      usuario = await this.usuarioRepository.create(newUsuario);
+    }
+    
+    return usuario;
+  }
+
+  private determineUserTypeByEmail(email: string): 'Administrador' | 'Bibliotecario' | 'Consultor' {
+    // Lista de emails de administradores (configurable)
+    const adminEmails = [
+      'admin@biblioteca.unsa.edu.pe',
+      'bibliotecario@unsa.edu.pe',
+      // Agregar más emails según sea necesario
+    ];
+    
+    if (adminEmails.includes(email.toLowerCase())) {
+      return 'Administrador';
+    }
+    
+    // Por defecto, los usuarios son consultores
+    return 'Consultor';
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
@@ -69,17 +107,7 @@ export class UsuarioService {
       }
     }
 
-    let hashedPassword: string;
-    if (updateUsuarioDto.contraseña) {
-      hashedPassword = await bcrypt.hash(updateUsuarioDto.contraseña, 10);
-    }
-
-    const updatedData = {
-      ...updateUsuarioDto,
-      ...(hashedPassword && { contraseña: hashedPassword }),
-    };
-
-    return this.usuarioRepository.update(id, updatedData);
+    return this.usuarioRepository.update(id, updateUsuarioDto);
   }
 
   async remove(id: number) {
