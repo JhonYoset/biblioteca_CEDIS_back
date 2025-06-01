@@ -99,21 +99,12 @@ export class DocumentoImplRepository implements DocumentoRepository {
     return this.documentoMapper.toDomain(updatedDocumento);
   }
 
+  /* ESTA FUNCION PODRIA SER PARA LA BUSQUEDA DE DOCUMENTOS */
   async updateStock(id: number, increment: boolean): Promise<DocumentoEntity> {
     const documento = await this.documentoRepository.findOne({ where: { id } });
     if (!documento) {
       throw new Error('Documento no encontrado');
     }
-
-    if (increment) {
-      documento.cantidad_disponible += 1;
-    } else {
-      if (documento.cantidad_disponible <= 0) {
-        throw new Error('No hay ejemplares disponibles para préstamo');
-      }
-      documento.cantidad_disponible -= 1;
-    }
-
     const savedDocumento = await this.documentoRepository.save(documento);
     return this.documentoMapper.toDomain(savedDocumento);
   }

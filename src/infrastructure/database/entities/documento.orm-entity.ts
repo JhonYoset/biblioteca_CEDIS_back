@@ -29,20 +29,8 @@ export class DocumentoOrmEntity {
   })
   tipo: 'Libro' | 'Tesis' | 'Diapositiva' | 'Otro';
 
-  @Column({ nullable: true })
-  isbn: string;
-
   @Column({ type: 'date', nullable: true })
   fecha_publicacion: Date;
-
-  @Column()
-  ubicacion: string;
-
-  @Column()
-  cantidad_disponible: number;
-
-  @Column()
-  cantidad_total: number;
 
   @CreateDateColumn()
   fecha_registro: Date;
@@ -50,9 +38,12 @@ export class DocumentoOrmEntity {
   @UpdateDateColumn()
   fecha_actualizacion: Date;
 
-  @Column({ default: true })
-  estado: boolean;
-
+  @Column({
+    type: 'enum',
+    enum: ['Disponible', 'No disponible', 'Reservador'],
+  })
+  estado: 'Disponible' | 'No disponible' | 'Reservado';
+  
   @OneToMany(() => PrestamoOrmEntity, prestamo => prestamo.documento)
   prestamos: PrestamoOrmEntity[];
 }

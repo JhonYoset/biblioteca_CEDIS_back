@@ -22,24 +22,11 @@ export class CreateDocumentoDto {
   tipo: 'Libro' | 'Tesis' | 'Diapositiva' | 'Otro';
 
   @IsOptional()
-  @IsISBN()
-  isbn?: string;
-
-  @IsOptional()
   @IsDateString()
   fecha_publicacion?: string;
 
   @IsNotEmpty()
-  @IsString()
-  ubicacion: string;
+  @IsEnum(['Disponible', 'No disponible', 'Reservado'])
+  estado: 'Disponible' | 'No disponible' | 'Reservado';
 
-  @IsNotEmpty()
-  @IsNumber()
-  @IsPositive()
-  cantidad_disponible: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @IsPositive()
-  cantidad_total: number;
 }
