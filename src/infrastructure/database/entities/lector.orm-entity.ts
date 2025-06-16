@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from 'typeorm';
 import { PrestamoOrmEntity } from './prestamo.orm-entity';
+import { ReservaOrmEntity } from './reserva.orm-entity';
 
 @Entity('lectores')
 export class LectorOrmEntity {
@@ -35,4 +36,8 @@ export class LectorOrmEntity {
 
   @OneToMany(() => PrestamoOrmEntity, prestamo => prestamo.lector)
   prestamos: PrestamoOrmEntity[];
+
+  // Relacion con la tabla reserva
+  @OneToMany(() => ReservaOrmEntity, reserva => reserva.lector)
+  reservas: ReservaOrmEntity[];
 }

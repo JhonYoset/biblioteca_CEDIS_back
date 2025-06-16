@@ -47,9 +47,9 @@ export class PrestamoService {
     }
 
     // Verificar disponibilidad del documento
-    if (documento.cantidad_disponible <= 0) {
+    /*if (documento.cantidad_disponible <= 0) {
       throw new BadRequestException('No hay ejemplares disponibles para préstamo');
-    }
+    }*/
 
     // Crear el préstamo
     const prestamo = new PrestamoEntity(

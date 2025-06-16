@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { CategoriaOrmEntity } from './categoria.orm-entity';
 import { PrestamoOrmEntity } from './prestamo.orm-entity';
+import { ReservaOrmEntity } from './reserva.orm-entity';
 
 @Entity('documentos')
 export class DocumentoOrmEntity {
@@ -46,4 +47,8 @@ export class DocumentoOrmEntity {
   
   @OneToMany(() => PrestamoOrmEntity, prestamo => prestamo.documento)
   prestamos: PrestamoOrmEntity[];
+
+  // Relacion con la tabla reserva
+  @OneToMany(() => ReservaOrmEntity, reserva => reserva.documento)
+  reservas: ReservaOrmEntity[];
 }
