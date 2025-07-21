@@ -50,6 +50,21 @@ export class UsuarioService {
     return usuario;
   }
 
+  async getUserProfile(id: number) {
+    const usuario = await this.findOne(id);
+    
+    // Retornar información completa del perfil
+    return {
+      id: usuario.id,
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      correo: usuario.correo,
+      tipo: usuario.tipo,
+      fecha_creacion: usuario.fecha_creacion,
+      fecha_actualizacion: usuario.fecha_actualizacion,
+      userType: 'usuario'
+    };
+  }
   async findByEmail(email: string) {
     return this.usuarioRepository.findByEmail(email);
   }

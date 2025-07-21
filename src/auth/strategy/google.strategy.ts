@@ -154,7 +154,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     // Lista de emails específicos que deben ser usuarios del sistema
     const systemUserEmails = [
       'bibliotecario@unsa.edu.pe',
-      'jlunaq@unsa.edu.pe',
+      'admin@unsa.edu.pe',
       // Agregar más emails específicos aquí
     ];
 
@@ -181,7 +181,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     
     const emailPrefix = email.split('@')[0].toLowerCase();
     
-    if (emailPrefix.includes('admin') || emailPrefix.includes('director') || email === 'jlunaq@unsa.edu.pe') {
+    if (emailPrefix.includes('admin') || emailPrefix.includes('director') || email === 'admin@unsa.edu.pe') {
       userType = 'Administrador';
     } else if (emailPrefix.includes('biblioteca') || emailPrefix.includes('bibliotecario')) {
       userType = 'Bibliotecario';

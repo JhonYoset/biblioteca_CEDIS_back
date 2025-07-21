@@ -19,7 +19,7 @@ import { PaginationDto } from './../pagination.dto';
 import { Public } from '../../auth/decorators/public.decorator';
 
 @Controller('usuarios')
-//@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
@@ -35,7 +35,7 @@ export class UsuarioController {
   }
 
   @Post()
-  //@Roles('Administrador')
+  @Roles('Administrador')
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuarioService.create(createUsuarioDto);
   }
@@ -52,6 +52,11 @@ export class UsuarioController {
     return this.usuarioService.findOne(+id);
   }
 
+  @Get('profile/:id')
+  @Roles('Administrador', 'Bibliotecario', 'Consultor')
+  getUserProfile(@Param('id') id: string) {
+    return this.usuarioService.getUserProfile(+id);
+  }
   @Put(':id')
   @Roles('Administrador')
   update(@Param('id') id: string, @Body() updateUsuarioDto: UpdateUsuarioDto) {
